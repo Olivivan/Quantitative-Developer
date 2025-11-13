@@ -1,2 +1,2 @@
-# Quantitative-Developer
+# Quantitative_Developer
 Quant Projects
