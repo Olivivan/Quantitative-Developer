@@ -8,9 +8,7 @@ import pandas as pd
 from datetime import datetime
 from datetime import timedelta
 import time, threading, requests, re, random, os
-import other_functions
 from bs4 import BeautifulSoup
-from other_functions import *
 import gvars
 
 class AssetHandler:
@@ -27,7 +25,7 @@ class AssetHandler:
         except Exception as e:
             print("Could not load raw assets!")
             print(e)
-            block_thread()
+            raise RuntimeError("Failed to load raw assets") from e
 
         self.tradeableAssets = self.rawAssets
 

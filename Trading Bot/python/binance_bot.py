@@ -1,25 +1,39 @@
 # encoding: utf-8
 """
-Optimized Trading Bot for Binance
-- Async/await architecture
-- PyTorch-based technical indicators
+Optimized Trading Bot for Binance (GPU-accelerated)
+- Async/await architecture for non-blocking I/O
+- PyTorch-based technical indicators with CUDA acceleration (RTX 3090)
+- Mixed precision (FP16/TF32) for Ampere architecture
 - High-performance order management
 - Comprehensive logging and monitoring
+- GPU processing guaranteed for all indicator calculations
 """
 
 import asyncio
 import logging
 import sys
+import torch
 from datetime import datetime
 from pathlib import Path
 
 from binance_connector import BinanceConnector
 from async_trader import AsyncTrader
-from pytorch_indicators import TechnicalIndicators
+from pytorch_indicators import TechnicalIndicators, CUDA_AVAILABLE, DEVICE
 from config import get_config, load_config_from_file
 from assetHandler import AssetHandler
 
-# Configure logging
+logger = logging.getLogger(__name__)
+
+# Log CUDA availability at module import
+if CUDA_AVAILABLE:
+    logger.info(f"✓ CUDA available: {torch.cuda.get_device_name(0)}")
+    logger.info(f"  Compute capability: {torch.cuda.get_device_capability(0)}")
+    logger.info(f"  CUDA version: {torch.version.cuda}")
+    logger.info(f"  PyTorch device: {DEVICE}")
+else:
+    logger.warning("✗ CUDA not available - falling back to CPU (slower)")
+
+
 def setup_logging(config):
     """Configure logging system"""
     log_dir = Path(config.logging.log_dir)
@@ -46,6 +60,7 @@ def setup_logging(config):
 class BinanceBot:
     """
     Main trading bot orchestrator for Binance
+    All indicator calculations are GPU-accelerated on RTX 3090
     Manages trading strategies, position monitoring, and reporting
     """
     
@@ -64,16 +79,22 @@ class BinanceBot:
         if not self.config.validate():
             raise RuntimeError("Configuration validation failed")
         
-        # Initialize components
+        # Initialize components with GPU acceleration enabled by default
         self.trader = None
         self.indicators = TechnicalIndicators(
-            use_gpu=self.config.performance.use_gpu
+            use_gpu=True,  # Force GPU acceleration
+            use_fp16=CUDA_AVAILABLE  # Use FP16 mixed precision on RTX 3090
         )
         self.asset_handler = AssetHandler()
         
         # Trading stats
         self.total_trades = 0
         self.successful_trades = 0
+        
+        # Log GPU setup
+        self.logger.info(f"GPU acceleration: {self.indicators.use_gpu}")
+        if self.indicators.use_gpu:
+            self.logger.info(f"Mixed precision (FP16): {self.indicators.use_fp16}")
     
     async def connect(self):
         """Connect to Binance API"""

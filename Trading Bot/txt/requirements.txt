@@ -1,42 +1,103 @@
-# Required Dependencies for Optimized Binance Bot
+# Quantitative Trading Bot - GPU-Accelerated Requirements
+# RTX 3090 + CUDA 11.8 (cu118) PyTorch wheels
+# Last updated: November 17, 2025
 
-# Core dependencies
-aiohttp>=3.8.0          # Async HTTP client
-asyncio-contextmanager>=1.0.0  # Async context support
+# ============================================================================
+# INSTALLATION INSTRUCTIONS
+# ============================================================================
+# Install with PyTorch cu118 wheels (CUDA 11.8):
+#   pip install -r requirements.txt --index-url https://download.pytorch.org/whl/cu118
+#
+# Verify GPU after installation:
+#   python -c "import torch; print('GPU:', torch.cuda.is_available())"
+#   nvidia-smi
+# ============================================================================
 
-# Data processing
-pandas>=1.5.0
-numpy>=1.23.0
+# ============================================================================
+# PYTHON & CORE DEPENDENCIES
+# ============================================================================
+python>=3.8
+numpy>=1.21.0
+pandas>=1.3.0
 scipy>=1.9.0
 
-# Machine Learning & GPU
-torch>=1.12.0           # PyTorch for GPU-accelerated indicators (optional but recommended)
-torchvision>=0.13.0     # Vision utilities (optional)
+# ============================================================================
+# GPU/CUDA COMPUTING (RTX 3090 - Compute Capability 8.6 / Ampere)
+# ============================================================================
+# CUDA 11.8 wheels (cu118) - bundled with PyTorch
+# Supports FP32, FP16 (mixed precision), TF32 on Ampere
+torch>=2.7.1
+torchvision>=0.22.1
+torchaudio>=2.7.1
 
-# Big Data Processing
-pyspark>=3.3.0          # Apache Spark for distributed processing (optional)
+# ============================================================================
+# DISTRIBUTED COMPUTING & BIG DATA
+# ============================================================================
+pyspark>=3.3.0
 
-# Configuration & YAML support
+# ============================================================================
+# TRADING EXCHANGE APIs
+# ============================================================================
+python-binance>=1.0.17
+
+# ============================================================================
+# DATA PROCESSING & MACHINE LEARNING
+# ============================================================================
+scikit-learn>=1.0.0
+
+# Technical indicators (optional - PyTorch methods recommended for GPU)
+ta-lib>=0.4.24
+
+# ============================================================================
+# CONFIGURATION & UTILITIES
+# ============================================================================
 pyyaml>=6.0
+python-dotenv>=0.19.0
 
-# Technical indicators (legacy, now optimized with NumPy/PyTorch)
-# tulipy>=1.1.1  # Optional - can be replaced with PyTorch implementations
+# ============================================================================
+# ASYNC & CONCURRENCY
+# ============================================================================
+aiohttp>=3.8.0
+asyncio-contextmanager>=1.0.0
+tenacity>=8.1.0
 
-# Logging and monitoring
+# ============================================================================
+# LOGGING & MONITORING
+# ============================================================================
+colorlog>=6.7.0
 python-json-logger>=2.0.4
 
-# Rate limiting and resilience
-tenacity>=8.1.0         # Retry logic
-
-# Testing
-pytest>=7.2.0
-pytest-asyncio>=0.20.0
-
-# Code quality
+# ============================================================================
+# DEVELOPMENT & TESTING
+# ============================================================================
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-asyncio>=0.18.0
 black>=22.10.0
 flake8>=5.0.0
 mypy>=0.990
 
-# Performance monitoring
+# ============================================================================
+# PERFORMANCE MONITORING & PROFILING
+# ============================================================================
 memory-profiler>=0.61.0
-py-spy>=0.3.14          # Python profiler
+py-spy>=0.3.14
+
+# ============================================================================
+# JUPYTER & INTERACTIVE NOTEBOOKS
+# ============================================================================
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# ============================================================================
+# GPU DIAGNOSTICS & OPTIMIZATION
+# ============================================================================
+nvidia-ml-py3>=7.2.0  # For nvidia-smi queries from Python
+
+# ============================================================================
+# OPTIONAL PACKAGES
+# ============================================================================
+# Uncomment if needed:
+# plotly>=5.0.0  # Interactive plotting
+# requests>=2.28.0  # HTTP requests
+# websockets>=10.0  # WebSocket support
