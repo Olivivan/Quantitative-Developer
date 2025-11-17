@@ -1,10 +1,10 @@
 # Quantitative Developer Portfolio
 
-> A collection of algorithmic trading systems, backtesting frameworks, and quantitative research tools for spot and margin trading on Binance.
+> A collection of algorithmic trading systems, backtesting frameworks, and quantitative research tools for spot and margin trading on Binance API.
 
 ## 🎯 Overview
 
-This repository contains production-ready quantitative trading systems built with a focus on:
+This repository contains academic and study purpose only quantitative trading systems built with a focus on:
 - **Robust strategy development** using vectorized technical indicators and EMA-based momentum detection
 - **Spot day-trading on Binance** with risk management (stop-loss, take-profit, position sizing)
 - **High-performance backtesting** using NumPy/Pandas vectorization and distributed computation (Spark)
