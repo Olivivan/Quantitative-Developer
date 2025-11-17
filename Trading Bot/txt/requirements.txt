@@ -1,0 +1,42 @@
+# Required Dependencies for Optimized Binance Bot
+
+# Core dependencies
+aiohttp>=3.8.0          # Async HTTP client
+asyncio-contextmanager>=1.0.0  # Async context support
+
+# Data processing
+pandas>=1.5.0
+numpy>=1.23.0
+scipy>=1.9.0
+
+# Machine Learning & GPU
+torch>=1.12.0           # PyTorch for GPU-accelerated indicators (optional but recommended)
+torchvision>=0.13.0     # Vision utilities (optional)
+
+# Big Data Processing
+pyspark>=3.3.0          # Apache Spark for distributed processing (optional)
+
+# Configuration & YAML support
+pyyaml>=6.0
+
+# Technical indicators (legacy, now optimized with NumPy/PyTorch)
+# tulipy>=1.1.1  # Optional - can be replaced with PyTorch implementations
+
+# Logging and monitoring
+python-json-logger>=2.0.4
+
+# Rate limiting and resilience
+tenacity>=8.1.0         # Retry logic
+
+# Testing
+pytest>=7.2.0
+pytest-asyncio>=0.20.0
+
+# Code quality
+black>=22.10.0
+flake8>=5.0.0
+mypy>=0.990
+
+# Performance monitoring
+memory-profiler>=0.61.0
+py-spy>=0.3.14          # Python profiler

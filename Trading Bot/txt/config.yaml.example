@@ -1,0 +1,131 @@
+# Example Configuration for Binance Trading Bot
+# Rename this to config.yaml and fill in your API keys
+
+api:
+  # Binance API credentials (get from https://www.binance.com/en/account/api-management)
+  api_key: "YOUR_BINANCE_API_KEY_HERE"
+  api_secret: "YOUR_BINANCE_API_SECRET_HERE"
+  
+  # Use testnet (paper trading) for development
+  testnet: true
+  
+  # API endpoint (automatically set based on testnet flag)
+  base_url: "https://api.binance.com/api"
+  
+  # Request timeout in seconds
+  timeout_seconds: 10
+  
+  # Maximum retry attempts for failed requests
+  max_retries: 3
+
+trading:
+  # Maximum number of concurrent trading workers/threads
+  max_workers: 10
+  
+  # Capital allocated per trade ($)
+  oper_equity: 10000
+  
+  # Stop loss percentage (5% = 0.05)
+  # Position will be closed if price moves against you by this amount
+  stop_loss_margin: 0.05
+  
+  # Take profit ratio (1.5 = 1.5:1 risk:reward)
+  # If stop loss is $10 away, take profit is $15 away
+  take_profit_ratio: 1.5
+  
+  # Limit order margin (0.1% = 0.001)
+  # Price adjustment for limit orders to ensure fill
+  limit_order_margin: 0.001
+  
+  # Risk management
+  max_risk_per_trade: 0.02  # 2% of total capital per trade
+  max_daily_loss: 0.05       # Stop trading if down 5% for the day
+  max_positions: 5           # Maximum concurrent open positions
+
+indicators:
+  # Moving Average periods
+  sma_fast: 20
+  sma_slow: 50
+  ema_9: 9
+  ema_26: 26
+  
+  # RSI (Relative Strength Index)
+  rsi_period: 14
+  rsi_overbought: 70
+  rsi_oversold: 30
+  
+  # Stochastic Oscillator
+  stoch_k_period: 14
+  stoch_d_period: 3
+  stoch_min_buy: 25
+  stoch_max_buy: 75
+  
+  # MACD (Moving Average Convergence Divergence)
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  
+  # Bollinger Bands
+  bb_period: 20
+  bb_std_dev: 2.0
+  
+  # Average True Range
+  atr_period: 14
+
+time:
+  # Candlestick intervals for fetching data
+  fetch_small: "5m"   # 5 minutes
+  fetch_large: "4h"   # 4 hours
+  fetch_daily: "1d"   # 1 day
+  
+  # Sleep times between checks (seconds)
+  general_trend: 600       # 10 minutes - check long-term trend
+  instant_trend: 120       # 2 minutes - check short-term trend
+  rsi_check: 60            # 1 minute - check RSI
+  stochastic_check: 60     # 1 minute - check Stochastic
+  position_monitor: 5      # 5 seconds - check open positions
+  asset_unlock: 600        # 10 minutes - unlock bad assets
+
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: "INFO"
+  
+  # Directory for log files
+  log_dir: "./logs"
+  
+  # Log message format (file)
+  file_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log message format (console)
+  console_format: "%(asctime)s - %(levelname)s - %(message)s"
+
+performance:
+  # Use PyTorch for technical indicators (faster, GPU-capable)
+  use_pytorch: true
+  
+  # Use GPU acceleration (requires CUDA)
+  # Only enable if you have NVIDIA GPU with CUDA installed
+  use_gpu: false
+  
+  # Use Apache Spark for distributed backtesting
+  # Only enable if PySpark is installed
+  use_spark: false
+  
+  # Enable caching for API responses and calculations
+  cache_enabled: true
+  
+  # Cache time-to-live in seconds
+  cache_ttl_seconds: 60
+  
+  # Binance API rate limit (default 1200 requests/minute)
+  rate_limit_per_minute: 1200
+  
+  # HTTP connection pool size
+  connection_pool_size: 100
+
+# Notes:
+# 1. For testnet: Get API keys from https://testnet.binance.vision
+# 2. For live trading: Get API keys from https://www.binance.com
+# 3. Always test on testnet (testnet: true) before live trading
+# 4. Never commit this file with real API keys to version control
+# 5. Use environment variables for sensitive data in production
