@@ -42,7 +42,7 @@ Trading Bot/
 
 ### Prerequisites
 - Python 3.8+
-- NVIDIA GPU (RTX 3090+ recommended for backtesting)
+- NVIDIA GPU
 - CUDA 11.8 or 12.1 (PyTorch cu118/cu121)
 - Binance API keys (free or paid tier)
 
@@ -51,7 +51,7 @@ Trading Bot/
 1. **Clone and setup**
    ```bash
    git clone https://github.com/Olivivan/Quantitative-Developer.git
-   cd Quantitative-Developer/Trading\ Bot
+   cd Quantitative-Developer/Trading Bot
    ```
 
 2. **Create virtual environment**
@@ -74,21 +74,6 @@ Trading Bot/
      ```
 
 ### Running the Bot
-
-**Backtest a strategy**
-```bash
-python -m Trading_Bot.binance_bot --backtest --symbol BTCUSDT --start 2024-01-01 --end 2024-11-17
-```
-
-**Live trading (paper / small positions only)**
-```bash
-python -m Trading_Bot.binance_bot --live --symbol ETHUSDT --max-position-size 0.01
-```
-
-**Jupyter notebook diagnostics**
-```bash
-jupyter notebook test.ipynb
-```
 
 ---
 
@@ -164,16 +149,6 @@ See [PERFORMANCE_TESTING.md](./Trading%20Bot/PERFORMANCE_TESTING.md) for detaile
 
 ---
 
-## 🔄 Recent Changes
-
-- ✅ **Migrated from Alpaca to Binance** for improved liquidity and fee structure
-- ✅ **Replaced legacy strategies** (MA Crossover, RSI Mean Reversion, Bollinger Bands, MACD) with robust EMA+ATR day-trade strategy
-- ✅ **CUDA support verified** on RTX 3090 with PyTorch 2.7.1 cu118
-- ✅ **Reorganized folder structure** into src/, strategies/, data/, docs/
-- ⏳ **Upcoming**: Portfolio optimization, multi-symbol execution, live Telegram alerts
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please:
@@ -182,14 +157,6 @@ Contributions are welcome! Please:
 3. Commit your changes (`git commit -am 'Add my improvement'`)
 4. Push to the branch (`git push origin feature/my-improvement`)
 5. Open a Pull Request
-
----
-
-## 📚 Documentation
-
-- **[Architecture Guide](./Trading%20Bot/ARCHITECTURE.md)**: System design, module breakdown, execution flow
-- **[Binance Migration Guide](./Trading%20Bot/BINANCE_MIGRATION_GUIDE.md)**: Transition from Alpaca to Binance
-- **[Performance Testing](./Trading%20Bot/PERFORMANCE_TESTING.md)**: Benchmarks and optimization results
 
 ---
 
@@ -207,22 +174,13 @@ Contributions are welcome! Please:
 
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
 ## 👨‍💻 Author
 
-**Quantitative Developer** | Building systematic trading systems for Binance Spot Markets
+**Quantitative Developer** | Building systematic trading systems
 
 - 🔗 GitHub: [@Olivivan](https://github.com/Olivivan)
-- 📧 Contact: [your-email@example.com]
 
 ---
 
-## ⭐ Support
 
-If you find this project useful, please consider starring it on GitHub! Questions and feedback are always welcome.
 
