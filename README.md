@@ -29,7 +29,7 @@ Trading Bot/
 │   └── backtest_results/          # Backtesting output logs
 ├── docs/                          # Documentation & architecture diagrams
 │   ├── ARCHITECTURE.md            # System design & module breakdown
-│   ├── BINANCE_MIGRATION_GUIDE.md # Migration from legacy Alpaca system
+│   ├── BINANCE_MIGRATION_GUIDE.md # Migration notes and upgrade guide
 │   └── PERFORMANCE_TESTING.md     # Benchmark results & profiling
 ├── requirements.txt               # Python dependencies
 ├── test.ipynb                     # CUDA/PyTorch diagnostics notebook

@@ -1,0 +1,2 @@
+2025-11-17 14:39:34,571 - __main__ - INFO - Bot initialized for environment: development
+2025-11-17 14:39:34,571 - config - ERROR - Configuration validation failed: ['API key is required', 'API secret is required']

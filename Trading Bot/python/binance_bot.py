@@ -9,6 +9,7 @@ Optimized Trading Bot for Binance (GPU-accelerated)
 - GPU processing guaranteed for all indicator calculations
 """
 
+import argparse
 import asyncio
 import logging
 import sys
@@ -21,6 +22,8 @@ from async_trader import AsyncTrader
 from pytorch_indicators import TechnicalIndicators, CUDA_AVAILABLE, DEVICE
 from config import get_config, load_config_from_file
 from assetHandler import AssetHandler
+from backtest_engine import BacktestEngine, TransactionCostModel, OrderSide
+from pytorch_indicators import TechnicalIndicators
 
 logger = logging.getLogger(__name__)
 
@@ -268,6 +271,85 @@ async def main():
         await bot.disconnect()
 
 
+def _parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument('--backtest', action='store_true', help='Run backtest using public Binance klines')
+    p.add_argument('--symbol', type=str, default='BTCUSDT')
+    p.add_argument('--start', type=str, help='Start date YYYY-MM-DD')
+    p.add_argument('--end', type=str, help='End date YYYY-MM-DD')
+    p.add_argument('--interval', type=str, default='1h')
+    return p.parse_args()
+
+
+async def run_backtest_cli(symbol: str, start: str | None, end: str | None, interval: str = '1h'):
+    """Fetch public klines from Binance and run a simple MA(20,50)+RSI backtest."""
+    # Use a connector without API keys for public endpoints
+    connector = BinanceConnector(api_key='', api_secret='', testnet=False)
+    await connector.connect()
+
+    # Convert start/end to milliseconds if provided
+    start_ms = None
+    end_ms = None
+    if start:
+        start_ms = int(datetime.fromisoformat(start).timestamp() * 1000)
+    if end:
+        end_ms = int(datetime.fromisoformat(end).timestamp() * 1000)
+
+    # Fetch up to 1000 candles; if the date range is larger, the connector supports start/end params
+    try:
+        df = await connector.get_klines(symbol, interval=interval, limit=1000,
+                                       start_time=start_ms, end_time=end_ms)
+    finally:
+        await connector.close()
+
+    if df is None or df.empty:
+        print('No klines returned for the requested symbol / date range')
+        return
+
+    # Build and run a simple backtest like the one in improved_strategies
+    closes = df['close'].values
+    CUDA = torch.cuda.is_available()
+    indicators = TechnicalIndicators(use_gpu=CUDA, use_fp16=CUDA)
+
+    costs = TransactionCostModel(commission_type='fixed', commission_amount=0.0,
+                                 slippage_type='percentage', slippage_amount=0.0005)
+
+    engine = BacktestEngine(initial_capital=100000, transaction_cost_model=costs)
+
+    in_position = False
+    for i in range(len(df)):
+        timestamp = df.index[i]
+        price = float(df['close'].iat[i])
+        engine.current_timestamp = timestamp
+        engine.current_prices['STOCK'] = price
+
+        if i > 50:
+            arr = closes[:i+1]
+            sma_20 = indicators.sma_gpu(arr, 20)[-1]
+            sma_50 = indicators.sma_gpu(arr, 50)[-1]
+            rsi = indicators.rsi_gpu(arr, 14)[-1]
+
+            if not in_position and (sma_20 > sma_50) and (rsi < 70):
+                engine.submit_order('STOCK', OrderSide.BUY, 1, price)
+                in_position = True
+            elif in_position and (sma_20 < sma_50 or rsi > 80):
+                engine.submit_order('STOCK', OrderSide.SELL, 1, price)
+                in_position = False
+
+        engine.step(timestamp, {'STOCK': price})
+
+    engine.close_all_positions({'STOCK': float(closes[-1])})
+    metrics = engine.calculate_metrics()
+
+    print('\nBacktest summary for', symbol)
+    print(f"Data points: {len(df)} | From: {df.index[0]} To: {df.index[-1]}")
+    print(f"Total Return: {metrics.total_return*100:+.2f}% | Sharpe: {metrics.sharpe_ratio:+.2f}")
+
+
 if __name__ == '__main__':
-    # Run the bot
-    asyncio.run(main())
+    args = _parse_args()
+    if args.backtest:
+        # Run backtest CLI
+        asyncio.run(run_backtest_cli(args.symbol, args.start, args.end, interval=args.interval))
+    else:
+        asyncio.run(main())

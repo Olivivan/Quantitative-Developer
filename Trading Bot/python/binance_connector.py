@@ -260,7 +260,9 @@ class BinanceConnector:
         }
     
     async def get_klines(self, symbol: str, interval: str = '1m', limit: int = 100,
-                        use_cache: bool = True) -> pd.DataFrame:
+                        use_cache: bool = True,
+                        start_time: Optional[int] = None,
+                        end_time: Optional[int] = None) -> pd.DataFrame:
         """
         Get klines (candlestick data) for symbol
         Optimized to return as DataFrame for technical analysis
@@ -273,6 +275,10 @@ class BinanceConnector:
                 return cached_df
         
         params = {'symbol': symbol, 'interval': interval, 'limit': limit}
+        if start_time is not None:
+            params['startTime'] = int(start_time)
+        if end_time is not None:
+            params['endTime'] = int(end_time)
         response = await self._request_with_retry('GET', '/v3/klines', params)
         
         # Convert to DataFrame for performance

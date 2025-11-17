@@ -15,15 +15,9 @@ stopLossMargin = 0.05 # extra margin for the stop loss
 operEquity = 10000 # defines the target amount per execution ($)
 limitOrderMargin = 0.1 # percentage that defines the offset for the limit orders
 
-# YOUR API KEYS AT ALPACA GO HERE!
-API_KEY = ""
-API_SECRET_KEY = ""
-ALPACA_API_URL = "https://paper-api.alpaca.markets"
+import os
 
-# this block checks whether you have your keys written or not
-if API_KEY is "" or API_SECRET_KEY is "":
-    print('\n\n##### \n\nPlease get an API key at the Alpaca website! \n\n##### \n\n')
-    raise ValueError
+# No legacy API keys required; project uses Binance configuration via `config` or env vars.
 
 ################################################################ ATTEMPTS ->
 # max iteration attempts for the different actions
